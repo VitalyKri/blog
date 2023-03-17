@@ -1,0 +1,49 @@
+version: '3'
+services:
+  postgres_blog:
+    build:
+      context: .
+      dockerfile: dockerfile_db
+    ports:
+      - "5001:5432"
+    networks:
+      - myNetwork
+  pgadmin:
+    build:
+      context: .
+      dockerfile: dockerfile_pgadmin
+    ports:
+      - "8484:80"
+    networks:
+      - myNetwork
+    depends_on:
+      - postgres_blog
+  liquidbase:
+    image: liquibase/liquibase:4.10
+    depends_on:
+      - pgadmin
+    volumes:
+      - ../db/:/liquibase/changelog/
+    command:  --defaults-file=/liquibase/changelog/liquibase.properties update
+    networks:
+      - myNetwork
+  blog:
+    build:
+      context: .
+      dockerfile: dockerfile_java
+    depends_on:
+      - liquidbase
+    volumes:
+    - ../../build/libs:/app
+    ports:
+      - "9898:8080"
+    command: java -jar blog-0.0.1-SNAPSHOT.jar
+    networks:
+      - myNetwork
+
+networks:
+  myNetwork:
+    external: true
+volumes:
+  db-data:
+    external: true
