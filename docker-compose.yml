@@ -1,0 +1,32 @@
+version: '3'
+services:
+  postgres_blog:
+    build:
+      context: .
+      dockerfile: dockerfile_db
+    ports:
+      - "5001:5432"
+    networks:
+      - myNetwork
+  pgadmin:
+    build:
+      context: .
+      dockerfile: dockerfile_pgadmin
+    ports:
+      - "8484:80"
+    networks:
+      - myNetwork
+  blog:
+    build:
+      context: .
+      dockerfile: dockerfile_java
+    ports:
+      - "9898:8080"
+    networks:
+      - myNetwork
+networks:
+  myNetwork:
+    external: true
+volumes:
+  db-data:
+    external: true
