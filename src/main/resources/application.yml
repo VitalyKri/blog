@@ -1,8 +1,7 @@
-
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/site
-    username: postgres
-    password: 1234
+    url: jdbc:postgresql://postgres_blog:5432/test-db
+    username: test-user
+    password: test-pass
   jpa:
     show-sql: true
