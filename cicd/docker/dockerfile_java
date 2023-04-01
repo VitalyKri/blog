@@ -1,0 +1,4 @@
+FROM openjdk:17-jdk-alpine3.14
+RUN mkdir /app && mkdir /config
+EXPOSE 9898
+WORKDIR /app
