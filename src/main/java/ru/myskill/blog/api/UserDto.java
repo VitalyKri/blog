@@ -1,12 +1,9 @@
 package ru.myskill.blog.api;
 
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import lombok.*;
-
-
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -36,5 +33,4 @@ public class UserDto {
     private String email;
     @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$")
     private String phone;
-    private boolean isDelete;
 }

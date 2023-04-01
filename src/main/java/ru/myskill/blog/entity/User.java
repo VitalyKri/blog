@@ -1,10 +1,9 @@
 package ru.myskill.blog.entity;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import ru.myskill.blog.entity.common.InfoEntity;
-
 
 import java.time.LocalDate;
 import java.util.Set;
