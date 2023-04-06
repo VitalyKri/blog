@@ -1,6 +1,6 @@
 package ru.myskill.blog.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +17,7 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "hard_skills")
 public class HardSkill extends InfoEntity {
 

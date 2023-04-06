@@ -40,10 +40,10 @@ services:
     command: java -jar blog-0.0.1-SNAPSHOT.jar
     networks:
       - myNetwork
-
-networks:
-  myNetwork:
-    external: true
 volumes:
   db-data:
     external: true
+networks:
+  myNetwork:
+    external: true
+

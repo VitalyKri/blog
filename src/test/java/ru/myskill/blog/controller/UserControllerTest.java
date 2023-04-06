@@ -12,7 +12,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import ru.myskill.blog.AbstractTest;
+import ru.myskill.blog.api.UserDto;
 import ru.myskill.blog.api.mapping.UserMapper;
 import ru.myskill.blog.entity.User;
 import ru.myskill.blog.repository.UserDao;
@@ -40,10 +42,11 @@ class UserControllerTest extends AbstractTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.equalTo("User сохранен")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.equalTo("Пользователь сохранен")));
     }
 
     @Test
+    @Order(1)
     void getAllUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/user"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -51,6 +54,7 @@ class UserControllerTest extends AbstractTest {
     }
 
     @Test
+    @Order(2)
     void getUserByNickname() throws Exception {
         ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/user/"+TestConstants.USER.getNickname()));
         perform.andExpect(MockMvcResultMatchers.status().isOk());
@@ -60,11 +64,14 @@ class UserControllerTest extends AbstractTest {
     }
 
     @Test
+    @Order(3)
     void deleteUser() throws Exception {
         ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/user/"+TestConstants.USER.getNickname()));
         MockHttpServletResponse response = perform.andReturn().getResponse();
-        User user = objectMapper.readValue(response.getContentAsString(), User.class);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/user/"+user.getId().toString()))
+
+
+        UserDto user = objectMapper.readValue(response.getContentAsString(), UserDto.class);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/user/"+user.getNickname()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.equalTo("Пользователь удален")));
         mockMvc.perform(MockMvcRequestBuilders.get("/user"))
