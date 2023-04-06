@@ -3,6 +3,7 @@ package ru.myskill.blog.entity;
 
 import javax.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import ru.myskill.blog.entity.common.InfoEntity;
 
 import java.time.LocalDate;
@@ -18,8 +19,8 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity(name = "users")
+@SuperBuilder
 public class User extends InfoEntity {
 
 

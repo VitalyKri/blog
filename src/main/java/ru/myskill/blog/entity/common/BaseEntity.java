@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -18,10 +19,11 @@ import java.util.UUID;
 @MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "id")
+    @Column(name = "id",columnDefinition = "UUID")
     private UUID id;
 }

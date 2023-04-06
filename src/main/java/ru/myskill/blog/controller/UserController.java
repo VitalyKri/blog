@@ -2,15 +2,14 @@ package ru.myskill.blog.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
+
+
 import org.springframework.web.bind.annotation.*;
 import ru.myskill.blog.api.UserDto;
 import ru.myskill.blog.api.mapping.UserMapper;
 import ru.myskill.blog.entity.User;
 import ru.myskill.blog.service.UserService;
-
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +31,7 @@ public class UserController {
     public String saveUser(@RequestBody UserDto userDto){
         User user = userMapper.toUser(userDto);
         userService.saveUser(user);
-        return "User сохранен";
+        return "Пользователь сохранен";
     }
 
     @Operation(summary = "Получение всех пользователей")
@@ -51,10 +50,10 @@ public class UserController {
         return userMapper.toUserDto(userById);
     }
 
-    @Operation(summary = "Удаление пользователя по ID")
-    @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable String id){
-        userService.deactivateUserById(UUID.fromString(id));
+    @Operation(summary = "Удаление пользователя по nickname")
+    @DeleteMapping("/{nickname}")
+    public String deleteUser(@PathVariable String nickname){
+        userService.deactivateUserByNickname(nickname);
         return "Пользователь удален";
     }
 }

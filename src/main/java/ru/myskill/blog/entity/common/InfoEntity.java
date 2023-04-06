@@ -4,6 +4,7 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Setter
 @MappedSuperclass
 @NoArgsConstructor
+@SuperBuilder
 public class InfoEntity extends BaseEntity {
 
     @Version

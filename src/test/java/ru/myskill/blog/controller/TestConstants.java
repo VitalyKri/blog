@@ -4,10 +4,12 @@ package ru.myskill.blog.controller;
 import ru.myskill.blog.entity.User;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class TestConstants {
 
     public static final User USER = User.builder()
+            .id(UUID.randomUUID())
             .firstName("Иван")
             .lastName("Ивано")
             .aboutMe("Тра-лала")

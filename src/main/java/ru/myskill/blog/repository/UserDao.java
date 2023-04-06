@@ -13,6 +13,7 @@ import java.util.UUID;
  */
 public interface UserDao extends JpaRepository<User, UUID> {
     List<User> findAllByIsDeletedFalse();
+    Optional<User> findByNicknameAndVersion(String nickname,int version);
 
     Optional<User> findByNickname(String nickname);
 }
