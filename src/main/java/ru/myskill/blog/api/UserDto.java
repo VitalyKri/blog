@@ -19,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class UserDto {
-    @NonNull
+
     private UUID id;
     @NonNull
     private String firstName;
@@ -42,12 +42,12 @@ public class UserDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-        return Objects.equals(id, userDto.id);
+        return Objects.equals(nickname,userDto.nickname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(nickname);
     }
 
 }

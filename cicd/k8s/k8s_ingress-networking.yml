@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: decoder-ingress
+spec: #правила описывают в ролях
+  rules:
+    - host: decoder.local #Днс должен быть настроен так, что запросы должны действительно приходить на ingress контроллер
+      http: #по какием правилам трафик приходит в сервис
+        paths:
+          - path: / #получаем весь трафик
+            pathType: Prexif #получаем Это прфик
+            backend: #то куда будет перенаправлять трафик
+              service: #на сервис
+                name: decoder-frontend-service
+                port:
+                  number: 80
