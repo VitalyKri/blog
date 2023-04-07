@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.myskill.blog.api.UserDto;
 import ru.myskill.blog.api.mapping.UserMapper;
@@ -28,7 +29,7 @@ public class UserController {
 
     @Operation(summary = "Добавление пользователя")
     @PostMapping
-    public String saveUser(@RequestBody UserDto userDto){
+    public String saveUser(@RequestBody @Validated UserDto userDto){
         User user = userMapper.toUser(userDto);
         userService.saveUser(user);
         return "Пользователь сохранен";
