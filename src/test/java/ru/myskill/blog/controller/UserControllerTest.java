@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -18,6 +19,8 @@ import ru.myskill.blog.api.UserDto;
 import ru.myskill.blog.api.mapping.UserMapper;
 import ru.myskill.blog.entity.User;
 import ru.myskill.blog.repository.UserDao;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
@@ -77,5 +80,25 @@ class UserControllerTest extends AbstractTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/user"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
+    }
+
+    @Test
+    @Order(4)
+    void createEmptyUser() throws Exception {
+        String request= objectMapper.writeValueAsString(new UserDto());
+        MockHttpServletResponse response =
+                mockMvc.perform(MockMvcRequestBuilders.post("/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+                ).andReturn().getResponse();
+        assertEquals(response.getStatus(),400);
+        request= objectMapper.writeValueAsString( UserDto.builder().firstName("dfdf").lastName("dfdf").build());
+        response =
+                mockMvc.perform(MockMvcRequestBuilders.post("/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+                ).andReturn().getResponse();
+        assertEquals(response.getStatus(),200);
+
     }
 }
