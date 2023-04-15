@@ -48,6 +48,7 @@ public class TestIntegration extends AbstractTestContainerSetup {
     @Test
     @Order(1)
     void createUser() {
+
         ResponseEntity<String> responseEntity = userGateway.saveUser(userDto);
         String body = responseEntity.getBody();
         assertEquals(body, "Пользователь сохранен");
