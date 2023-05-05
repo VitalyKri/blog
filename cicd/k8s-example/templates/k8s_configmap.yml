@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap #хранит параметры контейнера
+metadata:
+  name: {{ .Values.appname }}-config #имя конфига
+  namespace: {{ .Values.namespace}}
+data: #Данные хранящие в мапе
+  decoder_backend_host: {{ .Values.apiHost}}
+
