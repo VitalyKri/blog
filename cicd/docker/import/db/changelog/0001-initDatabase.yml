@@ -96,6 +96,9 @@ databaseChangeLog:
                   type: boolean
                   defaultValueBoolean: false
               - column:
+                  name: rating
+                  type: int
+              - column:
                   name: version
                   type: int
         - addPrimaryKey:
