@@ -34,8 +34,11 @@ public class User extends InfoEntity {
     private LocalDate dateOfBirth;
     @Column
     private String city;
-    @Column
-    private UUID picture_id;
+
+    @ManyToOne
+    @JoinColumn(name = "picture_id")
+    private Picture picture;
+
     @Column
     private String aboutMe;
     @Column

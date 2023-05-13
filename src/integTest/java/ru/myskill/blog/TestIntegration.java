@@ -39,7 +39,7 @@ public class TestIntegration extends AbstractTestContainerSetup {
             .lastName("sdfasd")
             .nickname("2123")
             .aboutMe("dfsdf")
-            .email("dfsdf")
+            .email("gmail@gmail.com")
             .city("Уфа")
             .dateOfBirth(LocalDate.now())
             .build();

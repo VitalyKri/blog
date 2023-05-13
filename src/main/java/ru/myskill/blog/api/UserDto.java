@@ -4,6 +4,8 @@ package ru.myskill.blog.api;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import lombok.*;
+import org.yaml.snakeyaml.Yaml;
+
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -43,6 +45,7 @@ public class UserDto {
         if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
         return Objects.equals(nickname,userDto.nickname);
+
     }
 
     @Override

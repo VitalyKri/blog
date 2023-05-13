@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello
+  labels:
+    env: prod
+    app: main
+    tier: frontend
+    owner:
+spec:
+  containers:
+    - name: hello
+      image: strm/helloworld-http
+      ports:
+        - containerPort: 80
+          hostPort: 7788
