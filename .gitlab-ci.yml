@@ -25,9 +25,3 @@ test-job:
   image: openjdk:${JAVA_VERSION}-jdk-alpine3.14
   script:
     - ./gradlew test
-
-build-image-job:
-  stage: build_image
-  image: 
-
-
