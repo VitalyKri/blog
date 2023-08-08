@@ -1,4 +1,4 @@
-package ru.myskill.blog.Config;
+package ru.myskill.blog.api;
 
 import feign.Feign;
 import feign.FeignException;

@@ -1,4 +1,0 @@
-FROM postgres:14-alpine
-ENV POSTGRES_DB=test-db
-ENV POSTGRES_USER=test-user
-ENV POSTGRES_PASSWORD=test-pass

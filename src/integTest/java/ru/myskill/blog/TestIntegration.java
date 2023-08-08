@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
-import ru.myskill.blog.Config.AbstractTestContainerSetup;
+import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.myskill.blog.docker.AbstractTestContainerSetup;
 import ru.myskill.blog.Config.TestConfig;
 import ru.myskill.blog.api.UserDto;
 import ru.myskill.blog.api.UserGateway;
@@ -27,8 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 @SpringBootTest
 @Import(TestConfig.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Testcontainers
 public class TestIntegration extends AbstractTestContainerSetup {
-
 
     @Autowired
     UserGateway userGateway;
@@ -44,11 +47,12 @@ public class TestIntegration extends AbstractTestContainerSetup {
             .dateOfBirth(LocalDate.now())
             .build();
 
+    @Container
+    private static DockerComposeContainer dockerComposeContainer = AbstractTestContainerSetup.getInstance();
 
     @Test
     @Order(1)
     void createUser() {
-
         ResponseEntity<String> responseEntity = userGateway.saveUser(userDto);
         String body = responseEntity.getBody();
         assertEquals(body, "Пользователь сохранен");

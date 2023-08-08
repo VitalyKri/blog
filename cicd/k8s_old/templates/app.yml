@@ -1,0 +1,23 @@
+{{ range $key, $val := .Values.apps }}
+
+
+---
+{{ $myVal := dict "all" $ "val" $val}}
+{{- template "app.deployment" $myVal -}}
+---
+{{- template "app.service" $myVal -}}
+---
+{{- end -}}
+{{ range $val := .Values.config }}
+---
+{{ $myVal := dict "all" $ "val" $val}}
+  {{- template "app.config" $myVal -}}
+---
+{{ end}}
+
+  {{ range $val := .Values.secret }}
+---
+{{ $myVal := dict "all" $ "val" $val}}
+  {{- template "app.secret" $myVal -}}
+---
+  {{ end}}

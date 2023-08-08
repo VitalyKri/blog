@@ -1,0 +1,88 @@
+projectName:  "blog"
+namespace: &namespace dev
+apps:
+#  db:
+#    namespace: *namespace
+#    name: "db"
+#    replicasCount: 1
+#    container:
+#      image: postgres_blog
+#      version: 1.0.0
+#      port: 5432
+#    service:
+#      port: &port 5432
+#      targetPort: 5432
+#    secretMaps:
+#      - db-env-secret
+#  pgadmin:
+#    name: "pgadmin"
+#    namespace: *namespace
+#    replicasCount: 1
+#    container:
+#      image: pgadmin_blog
+#      version: 1.0.0
+#      port: 80
+#      env:
+#    service:
+#      port: 8080
+#      targetPort: 80
+#      nodePort: 30002
+#      type: NodePort
+#    secretMaps:
+#      - db-env-secret
+  liquibase:
+    name: "liquibase"
+    namespace: *namespace
+    replicasCount: 1
+    secretMaps:
+      - db-env-secret
+    filesConfig:
+      - mountPath: /liquibase/changelog/liquibase.properties
+        name: liquidbase-configfile
+        subPath: liquibase.properties
+    container:
+      image: liquibase
+      version: 4.12d
+      port: 8080
+      command:
+        - /bin/sh
+      args:
+        - liquibase
+        - update
+        - --defaults-file=/liquibase/changelog/liquibase.properties
+  blog:
+    name: "app"
+    namespace: *namespace
+    replicasCount: 2
+    container:
+      image: blog
+      version: 1.0.0
+      port: 8080
+      command:
+        - java
+      args:
+        - -jar
+        - blog-0.0.1.jar
+    service:
+      port: 8080
+      targetPort: 8080
+      nodePort: 30022
+      type: NodePort
+    secretMaps:
+      - db-env-secret
+secret:
+  dbEnvSecret:
+    name: "db-env-secret"
+    data:
+      POSTGRES_DB: blog
+      POSTGRES_USER: main_user
+      POSTGRES_PASSWORD: main_pass
+      POSTGRES_NAMESPACE: *namespace
+      POSTGRES_PORT: *port
+      POSTGRES_DRIVER: org.postgresql.Driver
+      POSTGRES_URL: blog-db-svc
+  pgadminSecret:
+    name: "pgadmin-secret"
+    data:
+      PGADMIN_DEFAULT_EMAIL: mail@org.com
+      PGADMIN_DEFAULT_PASSWORD: pg-pass

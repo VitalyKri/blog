@@ -29,7 +29,7 @@ public class UserController {
 
     @Operation(summary = "Добавление пользователя")
     @PostMapping
-    public String saveUser(@RequestBody @Validated UserDto userDto){
+    public String saveUser(@RequestBody @Validated UserDto userDto) throws Exception {
         User user = userMapper.toUser(userDto);
         userService.saveUser(user);
         return "Пользователь сохранен";

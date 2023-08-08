@@ -29,11 +29,16 @@ public class UserService {
     }
 
     public User getUserByNickname(String nickname) {
-        return userDao.findByNickname(nickname).orElseThrow();
+        return userDao.findByNicknameAndIsDeletedFalse(nickname).orElseThrow();
     }
 
 
-    public User saveUser(User user) {
+    public User saveUser(User user) throws Exception {
+
+        boolean present = userDao.findByNicknameAndIsDeletedFalse(user.getNickname()).isPresent();
+        if (present) {
+            throw new Exception("Пользователь существует");
+        }
         return userDao.save(user);
     }
 
@@ -42,7 +47,7 @@ public class UserService {
         if (nickname == null) {
             throw new NullPointerException();
         }
-        User user = userDao.findByNickname(nickname).orElseThrow();
+        User user = userDao.findByNicknameAndIsDeletedFalse(nickname).orElseThrow();
         user.setDeleted(true);
 
         userDao.save(user);

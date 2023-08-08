@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import ru.myskill.blog.api.FeignClientFactory;
 import ru.myskill.blog.api.UserGateway;
 
 /**
