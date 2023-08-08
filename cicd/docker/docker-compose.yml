@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+  postgres_blog:
+    image: postgres_blog:1.0.0 #обязательно поле, без него testcontainer создает новые образы
+    build:
+      context: .
+      dockerfile: dockerfile_db
+    ports:
+      - "5001:5432"
+    networks:
+      - myNetwork
+  pgadmin_blog:
+    image: pgadmin_blog:1.0.0
+    build:
+      context: .
+      dockerfile: dockerfile_pgadmin
+    ports:
+      - "8484:80"
+    networks:
+      - myNetwork
+    depends_on:
+      - postgres_blog
+  liquidbase_blog:
+    image: liquibase:4.10
+    build:
+      context: .
+      dockerfile: dockerfile_liquidbase
+    depends_on:
+      - pgadmin_blog
+    command: liquibase --defaults-file=/liquibase/changelog/liquibase.properties update
+    networks:
+      - myNetwork
+# todo нужно сделать, что бы образ файлы были в volumes, т.к. нужно обновлять образ,
+# todo что бы подхватывал новые файлы
+  blog:
+    image: blog:1.0.0
+    build:
+      context: .
+      dockerfile: dockerfile_java
+    depends_on:
+      - liquidbase_blog
+    ports:
+      - "9898:8080"
+    command: java -jar app.jar
+    networks:
+      - myNetwork
+networks:
+  myNetwork:
+    external: true
+

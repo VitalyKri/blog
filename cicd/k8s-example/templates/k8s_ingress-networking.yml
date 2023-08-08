@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Values.appName }}-ingress
+  namespace: {{ .Values.namespace}}
+spec: #правила описывают в ролях
+  rules:
+    - host: {{ .Values.appHost }}#Днс должен быть настроен так, что запросы должны действительно приходить на ingress контроллер
+      http: #по какием правилам трафик приходит в сервис
+        paths:
+          - path: / #получаем весь трафик
+            pathType: Prexif #получаем Это прфик
+            backend: #то куда будет перенаправлять трафик
+              service: #на сервис
+                name: {{ .Values.ingressedService }}
+                port:
+                  number: 80

@@ -1,0 +1,5 @@
+FROM openjdk:17-jdk-alpine3.14
+RUN mkdir /app && mkdir /config
+COPY ../import /app
+EXPOSE 9898
+WORKDIR /app

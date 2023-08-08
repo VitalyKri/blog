@@ -1,0 +1,32 @@
+appName: decoder
+appHost: decoder.local
+ingressedService: decoder-frontend-service
+apiHost: http://decoder-backend-service
+namespace: &namespace default
+
+apps:
+  - name: back
+    namespace: *namespace
+    appName: decoder-backend
+    replicasCount: 2
+    container:
+      image: skillbox/decoder-backend
+      version: 0.1.0
+      port: 8080
+    service:
+      port: 80
+      targetPort: 8080
+  - name: front
+    appName: decoder-backend
+    namespace: *namespace
+    replicasCount: 2
+    container:
+      image: skillbox/decoder-frontend
+      version: 0.1.0
+      port: 3000
+      env:
+    service:
+      port: 80
+      targetPort: 3000
+      nodePort: 30000
+      type: LoadBalancer

@@ -1,0 +1,56 @@
+apiVersion: apps/v1 #версия апи
+kind: Deployment #тип объекта который создается
+metadata: #данные об создаваемых данных
+  name: decoder-backend-deployment #имя деплоя
+  namespace: decoder-dev
+  labels: #ярлыки используются для связывания подов деплоев и сервисов
+    app: decoder-backend
+spec: #Задается спецификация по которой создается
+  replicas: 2 #2 реплики
+  selector: #как связываются деплойменты и поды
+    matchLabels: #связь по ярлыку
+      app: decoder-backend
+  template: #описываются шаблоны потов из которых состоит деплой
+    metadata:
+      labels:
+        app: decoder-backend
+    spec: #описание контейнеров что лежит в основе пода лежат в основе пода
+      containers: #описываются контейнеры
+        - name: decoder-backend #имя контейнера
+          image: skillbox/decoder-backend:1.0.1 #образ основа
+          ports: #порты контейнера
+            - containerPort: 8080
+
+
+
+--- # используется для разделение документа
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decoder-frontend-deployment
+  labels:
+    app: decoder-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: decoder-frontend
+  template:
+    metadata:
+      labels:
+        app: decoder-frontend
+    spec:
+      containers:
+        - name: decoder-frontend
+          image: skillbox/decoder-frontend:0.1.0
+          ports:
+            - containerPort: 3000
+          env: #переменные окружения контейнера
+            - name: REACT_APP_DECODER_BACKEND_HOST
+              valueFrom: #Значение нужно брать зи конфигмапы
+                configMapKeyRef: #Ссылка из конфигмапы
+                  name: decoder-config
+                  key: decoder_backend_host
+
+

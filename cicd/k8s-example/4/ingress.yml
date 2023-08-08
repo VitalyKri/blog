@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-host
+  namespace: test
+spec: #правила описывают в ролях
+  rules:
+    - host: www.maintest1.ru#Днс должен быть настроен так, что запросы должны действительно приходить на ingress контроллер
+      http: #по какием правилам трафик приходит в сервис
+        paths:
+          - path: / #получаем весь трафик
+            pathType: Prexif #получаем Это прфик
+            backend: #то куда будет перенаправлять трафик
+              serviceName: #{{ .Values.ingressedService }}#на сервис
+              servicePort: 80
+    - host: www.maintest12.ru #Днс должен быть настроен так, что запросы должны действительно приходить на ingress контроллер
+      http: #по какием правилам трафик приходит в сервис
+        paths:
+          - path: / #получаем весь трафик
+            pathType: Prexif #получаем Это прфик
+            backend: #то куда будет перенаправлять трафик
+              serviceName: #{{ .Values.ingressedService }}#на сервис
+              servicePort: 80

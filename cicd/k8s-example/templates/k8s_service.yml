@@ -1,0 +1,32 @@
+apiVersion: v1 #для сервиса v1 присваевает IP внутренее
+kind: Service
+metadata:
+  name: decoder-backend-service
+spec:
+  selector: #для связи сервиса с подами
+    app: decoder-backend #связь по лейблу
+  ports:
+    - protocol: TCP
+      port: 80 #внешний порт сервиса
+      targetPort: 8080 #порт внутри контейнера
+
+
+--- # используется для разделение документа
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: decoder-frontend-service
+spec:
+  #с Ingress не нужен открывать сервис во вне, все делает он
+  # type: LoadBalancer #имеет внешний IP адрес в отличии от кластер IP
+  selector:
+    app: decoder-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      #с Ingress не нужен открывать сервис во вне, все делает он
+      #nodePort: 30000 #порт который будет открыт на физ машине он должен быть в диапазоне от 30000-32767
+  
+
