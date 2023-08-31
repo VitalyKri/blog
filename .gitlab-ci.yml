@@ -50,6 +50,7 @@ test-job:
     when: on_failure
     expire_in: 1 days
 
+
 integ-test-job:
   stage: integ_test
   image: java_with_docker:1.0.0
@@ -72,6 +73,7 @@ integ-test-job:
     when: on_failure
     expire_in: 1 days
 
+# todo нужно поправить создание secret при каждом login в docker registry
 build-image-job:
   stage: build_image
   image: docker:24.0.5
