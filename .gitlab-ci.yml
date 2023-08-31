@@ -90,7 +90,7 @@ build-image-job:
     - update-ca-certificates
     - echo "$CI_REGISTRY_PASSWORD" |  docker login $CI_REGISTRY --username $CI_REGISTRY_USER  --password-stdin  > /dev/null 2>&1
   script:
-    - docker build -t $APP_NAME:$APP_VERSION ./cicd/docker -f ./cicd/docker/dockerfile_java
-    - docker push $APP_NAME:$APP_VERSION
-    - docker build -t liquibase:4.10 ./cicd/docker -f  ./cicd/docker/dockerfile_liquidbase
-    - docker push liquibase:4.10
+    - docker build -t $APP_NAME:$APP_VERSION $CI_REGISTRY/$APP_NAME ./cicd/docker -f ./cicd/docker/dockerfile_java
+    - docker push $CI_REGISTRY/$APP_NAME
+    - docker build -t liquibase:4.10 $CI_REGISTRY/liquibase ./cicd/docker -f  ./cicd/docker/dockerfile_liquidbase
+    - docker push $CI_REGISTRY/liquibase
