@@ -34,6 +34,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - chmod +x ./gradlew
     - export APP_VERSION=$(./gradlew properties | grep version | sed 's|.* ||')
     - export APP_NAME=$(./gradlew properties | grep name | sed 's|.* ||')
+    - env
   script: # скрипты для выполнения задания
     - ./gradlew bootJar
     - ./gradlew checkstyleMain
