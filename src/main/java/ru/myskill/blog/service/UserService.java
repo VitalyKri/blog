@@ -9,11 +9,6 @@ import ru.myskill.blog.repository.UserDao;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * @author Vitaly Krivobokov
- * @Date 14.03.2023
- */
-
 @Service
 @RequiredArgsConstructor
 public class UserService {

@@ -10,16 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.myskill.blog.entity.common.InfoEntity;
 
-
-
-/**
- * @author Vitaly Krivobokov
- * @Date 14.03.2023
- */
-
 @Getter
 @Setter
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "subscribers")

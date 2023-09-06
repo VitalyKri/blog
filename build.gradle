@@ -3,7 +3,12 @@ plugins {
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'nebula.integtest' version '9.6.2'
+    id 'checkstyle'
+    id 'jacoco'
+    id 'org.sonarqube' version "3.4.0.2513"
 }
+
+
 
 group = 'ru.myskill'
 version = '0.0.1'
@@ -24,6 +29,30 @@ ext {
 
 repositories {
     mavenCentral()
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled  true;
+    }
+}
+
+test.finalizedBy jacocoTestReport
+
+tasks.named("sonarqube").configure {
+    dependsOn test
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "testinfra_blog_AYplqN242RPnQmk__2OM"
+        property "sonar.organization", "skilljava"
+    }
+}
+
+checkstyle {
+    toolVersion = 10.1
+    maxWarnings(1)
 }
 
 dependencies {

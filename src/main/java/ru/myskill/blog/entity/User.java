@@ -1,20 +1,23 @@
 package ru.myskill.blog.entity;
 
 
-import javax.persistence.*;
-import lombok.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import ru.myskill.blog.entity.common.InfoEntity;
-
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.UUID;
 
-
-/**
- * @author Vitaly Krivobokov
- * @Date 13.03.2023
- */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -50,11 +53,11 @@ public class User extends InfoEntity {
     @Column
     private boolean isDeleted;
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY,mappedBy = "user")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "user")
     private Set<HardSkillUser> hardSkillsUsers;
 
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY,mappedBy = "user")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "user")
     private Set<Subscriber> subscribers;
 
 

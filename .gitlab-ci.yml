@@ -18,6 +18,7 @@ cache:
   paths:
     - .gradle
     - ./cicd
+    - .sonar/cache
 
 stages:          # List of stages for jobs, and their order of execution
   - build
@@ -29,20 +30,24 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
+    - export SONAR_USER_HOME=`pwd`/.sonar
     - chmod +x ./gradlew
     - export APP_VERSION=$(./gradlew properties | grep version | sed 's|.* ||')
     - export APP_NAME=$(./gradlew properties | grep name | sed 's|.* ||')
   script: # скрипты для выполнения задания
     - ./gradlew bootJar
+    - ./gradlew checkstyleMain
+    - ./gradlew checkstyleTest
     - cp ./build/libs/$APP_NAME-$APP_VERSION.jar ./cicd/docker/app.jar
 
 test-job:
   stage: test
   before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
+    - export SONAR_USER_HOME=`pwd`/.sonar
     - chmod +x ./gradlew
   script:
-    - ./gradlew test
+    - ./gradlew sonarqube
   artifacts:
     name: "$CI_PROJECT_PATH-$CI_COMMIT_REF_SLUG-test"
     paths:
@@ -64,6 +69,7 @@ integ-test-job:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x ./gradlew
   script:
+    - ./gradlew checkstyleIntegTest
     - ./gradlew integrationTest
   artifacts:
     name: "$CI_PROJECT_PATH-$CI_COMMIT_REF_SLUG-integrationTest"
@@ -95,3 +101,4 @@ build-image-job:
     - docker build -t $APP_NAME:$APP_VERSION ./cicd/docker -f ./cicd/docker/dockerfile_java
     - docker tag $APP_NAME:$APP_VERSION $CI_REGISTRY_IMAGE:$APP_VERSION
     - docker push $CI_REGISTRY_IMAGE:$APP_VERSION
+  when: manual
