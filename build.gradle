@@ -5,7 +5,7 @@ plugins {
     id 'nebula.integtest' version '9.6.2'
     id 'checkstyle'
     id 'jacoco'
-    id 'org.sonarqube' version "3.4.0.2513"
+    id "org.sonarqube" version "4.3.0.3225"
 }
 
 
@@ -39,14 +39,16 @@ jacocoTestReport {
 
 test.finalizedBy jacocoTestReport
 
-tasks.named("sonarqube").configure {
+tasks.named("sonar").configure {
     dependsOn test
 }
 
-sonarqube {
+sonar {
     properties {
-        property "sonar.projectKey", "testinfra_blog_AYplqN242RPnQmk__2OM"
-        property "sonar.organization", "skilljava"
+        property "sonar.projectKey", "blog"
+        property "sonar.qualitygate.wait", true
+        property "sonar.host.url", "http://sonarqube.krivobokov.local:9000"
+        property "sonar.login", "sqp_7990c629501b13b6b6d54018f206ea611e0cb5f2"
     }
 }
 
@@ -68,7 +70,6 @@ dependencies {
     implementation   'org.mapstruct:mapstruct:1.5.2.Final'
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
-
     testImplementation 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'

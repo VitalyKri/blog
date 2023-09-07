@@ -48,15 +48,13 @@ test-job:
     - export SONAR_USER_HOME=`pwd`/.sonar
     - chmod +x ./gradlew
   script:
-    - ./gradlew sonarqube
+    - ./gradlew sonar
   artifacts:
     name: "$CI_PROJECT_PATH-$CI_COMMIT_REF_SLUG-test"
     paths:
       - ./build/reports
     when: on_failure
     expire_in: 1 days
-
-
 integ-test-job:
   stage: integ_test
   image: java_with_docker:1.0.0
