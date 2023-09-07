@@ -1,26 +1,37 @@
 version: '3.7'
 services:
+  postgres_blog:
+    image: postgres_blog:1.0.0 #обязательно поле, без него testcontainer создает новые образы
+    build:
+      context: .
+      dockerfile: dockerfile_db
+    ports:
+      - "5001:5432"
+    networks:
+      - myNetwork
+  pgadmin_blog:
+    image: pgadmin_blog:1.0.0
+    build:
+      context: .
+      dockerfile: dockerfile_pgadmin
+    ports:
+      - "8484:80"
+    networks:
+      - myNetwork
+    depends_on:
+      - postgres_blog
   liquidbase_blog:
     image: liquibase:4.10
     build:
       context: .
       dockerfile: dockerfile_liquidbase
-    command: liquibase update --url="jdbc:postgresql://${POSTGRES_URL}:${POSTGRES_PORT}/${POSTGRES_DB}"
-          --username=$POSTGRES_USER
-          --password=$POSTGRES_PASSWORD
-          --driver=$POSTGRES_DRIVER
-          --changelog-file=changelog/db.changelog-master.yml
-    environment:
-      - POSTGRES_DRIVER=${POSTGRES_DRIVER}
-      - POSTGRES_URL=${POSTGRES_URL}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      - pgadmin_blog
+    command: liquibase --defaults-file=/liquibase/changelog/liquibase.properties update
     networks:
       - myNetwork
-    volumes:
-      - ../import/liquibase/changelog:/liquibase/changelog
+# todo нужно сделать, что бы образ файлы были в volumes, т.к. нужно обновлять образ,
+# todo что бы подхватывал новые файлы
   blog:
     image: blog:1.0.0
     build:
@@ -30,14 +41,10 @@ services:
       - liquidbase_blog
     ports:
       - "9898:8080"
-    environment:
-      - POSTGRES_DRIVER=${POSTGRES_DRIVER}
-      - POSTGRES_URL=${POSTGRES_URL}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    command: java -jar app.jar
     networks:
       - myNetwork
 networks:
   myNetwork:
+    external: true
+

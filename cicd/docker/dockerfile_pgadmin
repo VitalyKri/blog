@@ -1,0 +1,3 @@
+FROM dpage/pgadmin4:6.21
+ENV PGADMIN_DEFAULT_EMAIL=mail@org.com
+ENV PGADMIN_DEFAULT_PASSWORD=pg-pass
