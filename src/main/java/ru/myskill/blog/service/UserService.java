@@ -9,6 +9,11 @@ import ru.myskill.blog.repository.UserDao;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author Vitaly Krivobokov
+ * @Date 14.03.2023
+ */
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -24,16 +29,11 @@ public class UserService {
     }
 
     public User getUserByNickname(String nickname) {
-        return userDao.findByNicknameAndIsDeletedFalse(nickname).orElseThrow();
+        return userDao.findByNickname(nickname).orElseThrow();
     }
 
 
-    public User saveUser(User user) throws Exception {
-
-        boolean present = userDao.findByNicknameAndIsDeletedFalse(user.getNickname()).isPresent();
-        if (present) {
-            throw new Exception("Пользователь существует");
-        }
+    public User saveUser(User user) {
         return userDao.save(user);
     }
 
@@ -42,7 +42,7 @@ public class UserService {
         if (nickname == null) {
             throw new NullPointerException();
         }
-        User user = userDao.findByNicknameAndIsDeletedFalse(nickname).orElseThrow();
+        User user = userDao.findByNickname(nickname).orElseThrow();
         user.setDeleted(true);
 
         userDao.save(user);

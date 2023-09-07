@@ -3,16 +3,18 @@ package ru.myskill.blog.api;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
+
+
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
+
+/**
+ * @author Vitaly Krivobokov
+ * @Date 13.03.2023
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,9 +31,7 @@ public class UserDto {
     private LocalDate dateOfBirth;
 
     private String city;
-
-    private UUID pictureId;
-
+    private UUID picture_id;
     private String aboutMe;
     private String nickname;
     @Email
@@ -41,14 +41,10 @@ public class UserDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-        return Objects.equals(nickname, userDto.nickname);
+        return Objects.equals(nickname,userDto.nickname);
 
     }
 

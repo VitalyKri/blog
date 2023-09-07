@@ -1,50 +1,47 @@
 package ru.myskill.blog.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.Version;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.io.Serializable;
 
+
+/**
+ * @author Vitaly Krivobokov
+ * @Date 13.03.2023
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "hard_skills_users")
-public class HardSkillUser {
+public class HardSkillUser  {
 
     @Version
     @Column(name = "VERSION")
     private int version;
 
     @Embeddable
-    public class SkillUserCompositeKey implements Serializable {
+    public class HSUCompositeKey implements Serializable {
 
 
-        @Column(name = "user_id")
-        String userId;
-        @Column(name = "hard_skill_id")
-        String hardSkillId;
+        String user_id;
+        String hard_skill_id;
 
-        public SkillUserCompositeKey() {
+        public HSUCompositeKey() {
         }
-
-        public SkillUserCompositeKey(String userId, String hardSkillId) {
-            this.userId = userId;
-            this.hardSkillId = hardSkillId;
+        public HSUCompositeKey(String user_id, String hard_skill_id) {
+            this.user_id = user_id;
+            this.hard_skill_id = hard_skill_id;
         }
 
     }
 
     @EmbeddedId
-    private SkillUserCompositeKey skillUserCompositeKey;
+    private HSUCompositeKey HSUCompositeKey;
 
     @ManyToOne
     @MapsId("user_id")
@@ -59,6 +56,8 @@ public class HardSkillUser {
 
     @Column
     private int rating;
+
+
 
 
 }

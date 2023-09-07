@@ -1,4 +1,4 @@
-package ru.myskill.blog.api;
+package ru.myskill.blog.Config;
 
 import feign.Feign;
 import feign.FeignException;
@@ -18,6 +18,10 @@ import org.springframework.stereotype.Component;
 
 import static feign.FeignException.errorStatus;
 
+/**
+ * @author Vitaly Krivobokov
+ * @Date 05.04.2023
+ */
 
 @Component
 @RequiredArgsConstructor
@@ -35,7 +39,6 @@ public class FeignClientFactory {
                 .contract(new SpringMvcContract())
                 .target(requiredType, url);
     }
-
     private ErrorDecoder errorDecoder() {
         return (methodKey, response) -> {
             FeignException exception = errorStatus(methodKey, response);

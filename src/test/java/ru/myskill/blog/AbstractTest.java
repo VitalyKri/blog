@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AbstractTest {
@@ -24,8 +25,9 @@ public class AbstractTest {
     protected ObjectMapper objectMapper;
 
     @BeforeEach
-    protected void init() {
+    protected void init(){
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
+
 
 }
