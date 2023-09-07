@@ -23,11 +23,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-/**
- * @author Vitaly Krivobokov
- * @Date 14.03.2023
- */
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest extends AbstractTest {
 
@@ -55,9 +50,9 @@ class UserControllerTest extends AbstractTest {
         ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/user"));
         perform.andExpect(MockMvcResultMatchers.status().isOk());
         String userListString = perform.andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        List<UserDto> userList= objectMapper.readValue(userListString, new TypeReference<List<UserDto>>() {
+        List<UserDto> userList = objectMapper.readValue(userListString, new TypeReference<>() {
         });
-        Assertions.assertEquals(userList.size(),1);
+        Assertions.assertEquals(userList.size(), 1);
         UserDto userDto = userList.get(0);
 
         Assertions.assertEquals(userDto.getPhone(), TestConstants.USER.getPhone());

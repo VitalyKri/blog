@@ -5,7 +5,8 @@ metadata:
   namespace: {{ .Values.namespace}}
 data: #Данные хранящие в мапе
   liquibase.properties: |
-    url= jdbc:postgresql://{{ .Values.secret.dbEnvSecret.data.POSTGRES_URL }}:{{ .Values.secret.dbEnvSecret.data.POSTGRES_PORT }}/{{.Values.secret.dbEnvSecret.data.POSTGRES_DB}}
+    {{$myVal :=dict "project" .Values.projectName "name" .Values.apps.db.name -}}
+    url= jdbc:postgresql://{{ .Values.secret.dbEnvSecret.data.POSTGRES_PORT }}:{{ .Values.secret.dbEnvSecret.data.POSTGRES_PORT }}/{{.Values.secret.dbEnvSecret.data.POSTGRES_DB}}
     username= {{.Values.secret.dbEnvSecret.data.POSTGRES_USER}}
     password= {{.Values.secret.dbEnvSecret.data.POSTGRES_PASSWORD}}
     changeLogFile= changelog/db.changelog-master.yml

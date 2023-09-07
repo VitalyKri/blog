@@ -1,0 +1,66 @@
+version: '3.7'
+services:
+#  postgres_blog:
+#    image: postgres_blog:1.0.0 #обязательно поле, без него testcontainer создает новые образы
+#    build:
+#      context: .
+#      dockerfile: dockerfile_db
+#    ports:
+#      - "5001:5432"
+#    networks:
+#      - myNetwork
+#    environment:
+#      - POSTGRES_DB=blog
+#      - POSTGRES_USER=main_user
+#      - POSTGRES_PASSWORD=main_pass
+#  pgadmin_blog:
+#    image: pgadmin_blog:1.0.0
+#    build:
+#      context: .
+#      dockerfile: dockerfile_pgadmin
+#    ports:
+#      - "8484:80"
+#    networks:
+#      - myNetwork
+#    depends_on:
+#      - postgres_blog
+  liquidbase_blog:
+    image: liquibase:4.10
+    build:
+      context: .
+      dockerfile: dockerfile_liquidbase
+    command:  liquibase --defaults-file=/liquibase/changelog/liquibase.properties update
+    networks:
+      - myNetwork
+    environment:
+      - POSTGRES_DRIVER=org.postgresql.Driver
+      - POSTGRES_URL=192.168.1.81
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=blog-test
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    volumes:
+      - ../import/db:/liquibase/changelog
+  blog:
+    image: blog:1.0.0
+    build:
+      context: .
+      dockerfile: dockerfile_java
+    depends_on:
+      - liquidbase_blog
+    ports:
+      - "9898:8080"
+    command: java -jar blog-0.0.1.jar
+    environment:
+      - POSTGRES_DRIVER=org.postgresql.Driver
+      - POSTGRES_URL=192.168.1.81
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=blog-test
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    networks:
+      - myNetwork
+    volumes:
+      - ../import/libs:/app
+networks:
+  myNetwork:

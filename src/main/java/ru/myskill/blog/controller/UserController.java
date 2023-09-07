@@ -5,19 +5,19 @@ import lombok.RequiredArgsConstructor;
 
 
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.myskill.blog.api.UserDto;
 import ru.myskill.blog.api.mapping.UserMapper;
 import ru.myskill.blog.entity.User;
 import ru.myskill.blog.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
-
-/**
- * @author Vitaly Krivobokov
- * @Date 13.03.2023
- */
-
 
 @RestController
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class UserController {
 
     @Operation(summary = "Добавление пользователя")
     @PostMapping
-    public String saveUser(@RequestBody @Validated UserDto userDto){
+    public String saveUser(@RequestBody @Validated UserDto userDto) throws Exception {
         User user = userMapper.toUser(userDto);
         userService.saveUser(user);
         return "Пользователь сохранен";
@@ -37,23 +37,23 @@ public class UserController {
 
     @Operation(summary = "Получение всех пользователей")
     @GetMapping
-    public List<UserDto> getAllUser(){
+    public List<UserDto> getAllUser() {
         List<User> allUsers = userService.getAllUsers();
         return allUsers.stream()
-                .map(user -> userMapper.toUserDto(user))
+                .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
     @Operation(summary = "Получение пользователя по nickname")
     @GetMapping("/{nickname}")
-    public UserDto getUserBynickname(@PathVariable String nickname){
+    public UserDto getUserBynickname(@PathVariable String nickname) {
         User userById = userService.getUserByNickname(nickname);
         return userMapper.toUserDto(userById);
     }
 
     @Operation(summary = "Удаление пользователя по nickname")
     @DeleteMapping("/{nickname}")
-    public String deleteUser(@PathVariable String nickname){
+    public String deleteUser(@PathVariable String nickname) {
         userService.deactivateUserByNickname(nickname);
         return "Пользователь удален";
     }
