@@ -14,6 +14,12 @@
   {{- template "app.config" $myVal -}}
 ---
 {{ end}}
+{{ range $val := .Values.configmapFromFile }}
+---
+{{ $myVal := dict "all" $ "val" $val}}
+  {{- template "app.configmapFromFile" $myVal -}}
+---
+{{ end}}
 
   {{ range $val := .Values.secret }}
 ---

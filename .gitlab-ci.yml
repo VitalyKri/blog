@@ -1,6 +1,6 @@
 variables:
   JAVA_VERSION: 17
-  APP_NAME: blog
+  APP_NAME: blog-app
   APP_VERSION: 0.0.1
   APP_TAG: ${CI_COMMIT_TAG}
   POSTGRES_DRIVER: org.postgresql.Driver
@@ -9,6 +9,13 @@ variables:
   POSTGRES_DB: blog-test
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: 1234
+
+  # Имена для веток разработки и релиза
+  BRANCH_DEV: dev
+  BRANCH_TEST: main
+  # И образ для пайплайна с kubectl и helm
+  IMG_K8S: alpine/k8s:1.24.12
+
 
 image: openjdk:${JAVA_VERSION}-jdk-alpine3.14 # выбор образа для запуска
 
@@ -20,11 +27,14 @@ cache:
     - ./cicd
     - .sonar/cache
 
+################################## CI
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test
   - integ_test
   - build_image
+  - deploy
+
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
@@ -91,7 +101,7 @@ build-image-job:
       command:
         - /bin/sh
         - -c
-        - echo "$$CI_SERVER_TLS_CA_FILE" > /usr/local/share/ca-certificates/my-ca.crt && update-ca-certificates && dockerd-entrypoint.sh || exit
+        - echo "$CI_SERVER_TLS_CA_FILE" > /usr/local/share/ca-certificates/my-ca.crt && update-ca-certificates && dockerd-entrypoint.sh || exit
   before_script:
     - cp /etc/gitlab-runner/certs/ca.crt /usr/local/share/ca-certificates/
     - update-ca-certificates
@@ -100,4 +110,37 @@ build-image-job:
     - docker build -t $APP_NAME:$APP_VERSION ./cicd/docker -f ./cicd/docker/dockerfile_java
     - docker tag $APP_NAME:$APP_VERSION $CI_REGISTRY_IMAGE:$APP_VERSION
     - docker push $CI_REGISTRY_IMAGE:$APP_VERSION
+  when: manual
+################################## CD
+
+.deploy:
+  # Указываем этап, образ и команду деплоя при помощи helm
+  stage: deploy
+  image: $IMG_K8S
+  before_script:
+    - env
+  script:
+    - echo "Starting"
+    - helm upgrade -f values-$ENV --atomic --install $APP_RELEASE
+  # В блоке environment указываем имя окружения, это позволит gitlab поддерживать история деплоев на разные среды, что может быть интересно в будущем для анализа активности по проекту
+  environment:
+    name: $ENV
+
+deploy-to-dev:
+  extends: .deploy # указываем родительский шаблон
+  variables: # И конкретные значения переменных, которые в него передаются
+    ENV: dev
+  only: # В блоке only укажем что шаг должен запускаться только при коммитах в ветку dev  # Если ветка отличается, то шаг будет пропущен
+    - dev
+  when: manual
+deploy-to-test:
+  extends: .deploy
+  variables:
+    ENV: test
+  # Другой способ для описания условий для запуска пайплайна - блок rules
+  rules:
+  # Тут можно задать условие: название ветки с коммитом должно совпадать со значением переменной $BRANCH_DEV
+  # when: manual означает что требуется подтверждение для запуска этого шага (мы ведь не хотим случайно сломать тестерам их окружение)
+  # пайлайн будет находиться в состоянии blocked до тех пор пока шаг не будет подтвержден
+    - if: $CI_COMMIT_BRANCH == $BRANCH_DEV
   when: manual

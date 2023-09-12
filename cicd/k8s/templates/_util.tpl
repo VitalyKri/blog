@@ -59,23 +59,26 @@ envFrom:
 
 {{/*префикса файла конфига*/}}
 {{- define "app.filesConfig" -}}
-{{- if .val.filesConfig }}
+{{- if $.val.configMounts }}
     volumeMounts:
-{{- range $val := .val.filesConfig }}
-      - mountPath: {{ .mountPath }}
-        name: {{ .name }}
-        {{- if .subPath }}
-        subPath: {{ .subPath }}
-        {{- end}}
-{{- end}}
+{{- $files := $.all.Files }}
+  {{- range $val := $.val.configMounts }}
+    {{- $wildcard := printf "%s/**" $val.name }}
+    {{- $shortPath := printf "%s/" $val.name }}
+    {{- range $path, $_ := $.all.Files.Glob $wildcard }}
+      - name: {{ $val.name }}
+        mountPath: {{  printf "%s/%s" $val.mountPath ($path | trimPrefix $shortPath) }}
+        subPath: {{ $path |sha256sum | quote }}
+    {{- end}}
+  {{- end }}
 volumes:
-{{- range $val := .val.filesConfig }}
-  - name: {{ .name }}
+{{- range $val := .val.configMounts }}
+  - name: {{ $val.name }}
     configMap:
-      name: {{ .name }}
+      name: {{ $val.name }}
+{{- end}}
 {{- end}}
 {{- end }}
-{{end}}
 
 
 {{/*
