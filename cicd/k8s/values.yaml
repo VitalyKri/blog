@@ -1,5 +1,5 @@
 projectName:  "blog"
-namespace: &namespace gitlab
+namespace: &namespace dev
 apps:
   liquibase:
     name: "liquibase"
@@ -19,6 +19,10 @@ apps:
         - --password=$POSTGRES_PASSWORD
         - --driver=$POSTGRES_DRIVER
         - --changelog-file=changelog/db.changelog-master.yml
+    configMounts:
+      - name: liquibase
+        mountPath: /liquibase
+
   blog:
     name: "app"
     namespace: *namespace
@@ -44,3 +48,7 @@ secret:
       POSTGRES_PORT: 5432
       POSTGRES_DRIVER: org.postgresql.Driver
       POSTGRES_URL: 192.168.1.81
+
+configmapFromFile:
+  liquibase:
+    name: liquibase

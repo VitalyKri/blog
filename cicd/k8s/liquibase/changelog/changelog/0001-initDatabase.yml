@@ -1,0 +1,199 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_table_users
+      author: Кривобоков Виталий
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: gender
+                  type: varchar(63)
+              - column:
+                  name: date_of_birth
+                  type: datetime
+              - column:
+                  name: city
+                  type: varchar(255)
+              - column:
+                  name: picture_id
+                  type: uuid
+              - column:
+                  name: about_me
+                  type: varchar(1023)
+              - column:
+                  name: nickname
+                  type: varchar(63)
+              - column:
+                  name: email
+                  type: varchar(63)
+              - column:
+                  name: is_deleted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: phone
+                  type: varchar(63)
+              - column:
+                  name: version
+                  type: int
+  - changeSet:
+      id: create_table_hard_skills
+      author: Кривобоков Виталий
+      changes:
+        - createTable:
+            tableName: hard_skills
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: description
+                  type: varchar(1023)
+              - column:
+                  name: is_deleted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: version
+                  type: int
+  - changeSet:
+      id: create_table_hard_skills_users
+      author: Кривобоков Виталий
+      changes:
+        - createTable:
+            tableName: hard_skills_users
+            columns:
+              - column:
+                  name: user_id
+                  type: uuid
+              - column:
+                  name: hard_skill_id
+                  type: uuid
+              - column:
+                  name: description
+                  type: varchar(1023)
+              - column:
+                  name: is_deleted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: rating
+                  type: int
+              - column:
+                  name: version
+                  type: int
+        - addPrimaryKey:
+            tableName: hard_skills_users
+            columnNames: user_id,hard_skill_id
+            constraintName: pk_hard_skills_users
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: hard_skills_users
+            referencedColumnNames: id
+            referencedTableName: users
+            constraintName: fk_hard_skills_users_user_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+        - addForeignKeyConstraint:
+            baseColumnNames: hard_skill_id
+            baseTableName: hard_skills_users
+            referencedColumnNames: id
+            referencedTableName: hard_skills
+            constraintName: fk_hard_skills_users_hard_skill_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+  - changeSet:
+      id: create_table_pictures
+      author: Кривобоков Виталий
+      changes:
+        - createTable:
+            tableName: pictures
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: path_picture
+                  type: varchar(1023)
+              - column:
+                  name: description
+                  type: varchar(1023)
+              - column:
+                  name: version
+                  type: int
+        - addForeignKeyConstraint:
+            baseColumnNames: picture_id
+            baseTableName: users
+            referencedColumnNames: id
+            referencedTableName: pictures
+            constraintName: fk_users_picture_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+  - changeSet:
+      id: create_table_subscribers
+      author: Кривобоков Виталий
+      changes:
+        - createTable:
+            tableName: subscribers
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subscriber_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: boolean
+              - column:
+                  name: version
+                  type: int
+        - addPrimaryKey:
+            tableName: subscribers
+            columnNames: user_id,subscriber_id
+            constraintName: pk_subscribers
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: subscribers
+            referencedColumnNames: id
+            referencedTableName: users
+            constraintName: fk_subscribers_user_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+        - addForeignKeyConstraint:
+            baseColumnNames: subscriber_id
+            baseTableName: subscribers
+            referencedColumnNames: id
+            referencedTableName: users
+            constraintName: fk_subscribers_subscribers_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION

@@ -47,6 +47,8 @@ spec:
           {{- end}}
           {{- include "app.envFrom" $ | nindent 10 -}}
        {{- include "app.filesConfig" $ | indent 6 }}
+      imagePullSecrets:
+        - name: registry-credential
 {{end}}
 
 {{/*
@@ -100,6 +102,27 @@ data:
 {{- end }}
 {{ end }}
 {{ end }}
+
+{{- define "app.configmapFromFile"}}
+{{/*{{- if .val.name }}*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .val.name }}
+  namespace: {{ .all.Values.namespace}}
+  labels:
+    {{- include "app.labels" $ | nindent 4 }}
+data:
+  {{- $files := .all.Files }}
+  {{- $wildcard := printf "%s/**" .val.name }}
+  {{- $shortPath := printf "%s/" .val.name }}
+  {{- range $path, $_ := .all.Files.Glob $wildcard }}
+  {{ $path |sha256sum  }}: |
+{{ $files.Get $path  | indent 4 }}
+  {{- end }}
+{{/*{{ end }}*/}}
+{{ end }}
+
 
 {{- define "app.secret"}}
 {{- if .val.name }}
